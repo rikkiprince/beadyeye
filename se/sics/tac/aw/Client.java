@@ -6,6 +6,9 @@ public class Client
 	private int preferredStartDay;
 	private int preferredEndDay;
 
+	private int currentStartDay;
+	private int currentEndDay;
+
 	private int flightInDay;			// must be -1 or less if do not have an allocation
 	private int flightOutDay;			// must be -1 or less if do not have an allocation
 
@@ -26,6 +29,9 @@ public class Client
 
 		this.preferredStartDay = ps;
 		this.preferredEndDay = pe;
+
+		this.currentStartDay = this.preferredStartDay;
+		this.currentEndDay = this.preferredEndDay;
 
 		this.hotelUpgradePremium = up;
 
@@ -129,12 +135,12 @@ public class Client
 		return true;		// change to true once filled in
 	}
 
-	public boolean withinStay(int eve)
+	private boolean withinStay(int eve)
 	{
 		return (eve >= flightInDay && eve < flightOutDay);
 	}
 
-	public boolean goodHotel()
+	private boolean goodHotel()
 	{
 		for(int h = flightInDay; h < flightOutDay; h++)
 			if(!goodHotel[h])
@@ -202,17 +208,26 @@ public class Client
 
 	public int start()
 	{
-		return ((flightInDay > -1)?flightInDay:preferredStartDay);
+		return ((flightInDay >= Constants.DAY_1)?flightInDay:currentStartDay);
 	}
 
 	public int end()
 	{
-		return ((flightOutDay > -1)?flightOutDay:preferredEndDay);
+		return ((flightOutDay >= Constants.DAY_1)?flightOutDay:currentEndDay);
 	}
 
 	public int hotelType()
 	{
-		if((this.hotelUpgradePremium/nights()) > 50)
+		for(int h = currentStartDay; h < currentEndDay; h++)
+		{
+			if(hotelCost[h] >= 0)
+				if(goodHotel[h])
+					return TACAgent.TYPE_GOOD_HOTEL;
+				else
+					return TACAgent.TYPE_CHEAP_HOTEL;
+		}
+
+		if((this.hotelUpgradePremium/nights()) > 50)	// calculate this based on stats - how much more is good hotel normally?
 			return TACAgent.TYPE_GOOD_HOTEL;
 		else
 			return TACAgent.TYPE_CHEAP_HOTEL;
@@ -225,9 +240,51 @@ public class Client
 		return 0;
 	}
 
-	public boolean doYouWant(int category, int type, int day)
+	public boolean doYouWant(int category, int type, int day, float price)
 	{
+		switch(category)
+		{
+			case TACAgent.CAT_HOTEL:			if(day >= currentStartDay && day < currentEndDay && hotelCost[day] < 0 && type == hotelType())
+												{
+													hotelCost[day] = price;
+													return true;
+												}
+												break;
+			case TACAgent.CAT_FLIGHT:			
+												break;
+			case TACAgent.CAT_ENTERTAINMENT:	
+												break;
+		}
 		return false;
+	}
+
+	public boolean hasFlightIn()
+	{
+		return !(this.flightInDay < 0 || this.flightInCost < 0);
+	}
+
+	public boolean hasFlightOut()
+	{
+		return !(this.flightOutDay < 0 || this.flightOutCost <= -1);
+	}
+
+	public boolean hasCompleteHotelPackage()
+	{
+		boolean previous = goodHotel[currentStartDay];
+
+		for(int h = currentStartDay; h < currentEndDay; h++)
+		{
+			if(hotelCost[h] < 0)
+				return false;
+			
+			if(previous == goodHotel[h])
+			{
+				previous = goodHotel[h];
+			}
+			else return false;
+		}
+
+		return true;
 	}
 
 	/*public void auctionClosed()

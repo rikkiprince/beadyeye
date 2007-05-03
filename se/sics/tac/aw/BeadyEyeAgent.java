@@ -66,7 +66,8 @@ public class BeadyEyeAgent extends AgentImpl
 		{
 			case TACAgent.CAT_FLIGHT:	flights.quoteUpdated(new Flight(day, type, price));
 										break;
-			case TACAgent.CAT_HOTEL:	Bid bid = new Bid(auction);
+			case TACAgent.CAT_HOTEL:	OUT.println("= Bidding for cheap hotels!");
+										Bid bid = new Bid(auction);
 										if(price == 0)
 										{
 											bid.addBidPoint(2, 10);
@@ -174,6 +175,7 @@ public class BeadyEyeAgent extends AgentImpl
 		int day = agent.getAuctionDay(auction);
 		String s = agent.getAuctionTypeAsString(auction);
 		int quantity = t.getQuantity();
+		float price = t.getPrice();
 
 		OUT.println("Transaction: " + quantity + " @ " + t.getPrice() + " in " + s);
 
@@ -182,25 +184,48 @@ public class BeadyEyeAgent extends AgentImpl
 		//		.doYouWant(x)
 
 		// for simplicity, just .doYouWant(x) for each transaction
+		int unalloc_quantity = quantity;
 		for(int c=0; c < Constants.NUM_CLIENTS; c++)
 		{
-			if(client[c].doYouWant(category, type, day))
+			if(client[c].doYouWant(category, type, day, price))
 			{
 				OUT.println("Allocated to Client " + (c+1));
-				quantity--;
-				if(quantity <= 0)
+				unalloc_quantity--;
+				if(unalloc_quantity <= 0)
 					break;
 			}
 		}
 
+		if(unalloc_quantity > 0)
+		{
+			// do something with unallocated bookings
+			// put in Vector<Booking> unallocated;
+		}
+
+
 		// if client have full hotel roster, order flights
+		for(int c=0; c < Constants.NUM_CLIENTS; c++)
+		{
+			if(client[c].hasCompleteHotelPackage())
+			{
+				OUT.println("Client " + (c+1) + " has a complete hotel package!");
+				// book flights
+				if(!client[c].hasFlightIn())
+					flights.pleaseBuy(quantity, TACAgent.TYPE_INFLIGHT, client[c].start());
+				if(!client[c].hasFlightOut())
+					flights.pleaseBuy(quantity, TACAgent.TYPE_OUTFLIGHT, client[c].end());
+			}
+		}
+
+		// incorporate this into client loop above?
+
 
 		// if just doing single nights, do this:
-		if(category == TACAgent.CAT_HOTEL)
+		/*if(category == TACAgent.CAT_HOTEL)
 		{
 			flights.pleaseBuy(quantity, TACAgent.TYPE_INFLIGHT, day);
 			flights.pleaseBuy(quantity, TACAgent.TYPE_OUTFLIGHT, day+1);
-		}
+		}*/
 	}
 
 
