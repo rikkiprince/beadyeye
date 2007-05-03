@@ -1,0 +1,206 @@
+Printing Client info!
+
+*** Client 1 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:           A  D 
+Act:           
+HOTEL
+Pref:           x    
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 2 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:  A  D          
+Act:           
+HOTEL
+Pref:  x             
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 3 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:     A  D       
+Act:           
+HOTEL
+Pref:     x          
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 4 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:        A  D    
+Act:           
+HOTEL
+Pref:        x       
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 5 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:           A  D 
+Act:           
+HOTEL
+Pref:           x    
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 6 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:  A  D          
+Act:           
+HOTEL
+Pref:  x             
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 7 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:        A  D    
+Act:           
+HOTEL
+Pref:        x       
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+
+*** Client 8 ***
+=================================
+Day:   1  2  3  4  5 
+FLIGHT
+Pref:     A        D 
+Act:           
+HOTEL
+Pref:     x  x  x    
+Act:           
+ENT
+Type: 
+Package is infeasible.
+
+Sending initial bids.
+Bidding in auction 15 $1058 for good hotel on Day 4
+Bidding in auction 12 $1057 for good hotel on Day 1
+Bidding in auction 13 $1100 for good hotel on Day 2
+Bidding in auction 14 $1147 for good hotel on Day 3
+Bidding in auction 15 $1083 for good hotel on Day 4
+Bidding in auction 12 $1079 for good hotel on Day 1
+Bidding in auction 14 $1069 for good hotel on Day 3
+Transaction: 1 @ 6.0 in Good Hotel 2
+
+=============================================
+Auction 13 closed
+Day: 2
+Type: Good Hotel 2
+Price: 6.0
+=============================================
+
+Transaction: 1 @ 263.0 in Inflight 2
+Transaction: 1 @ 283.0 in Outflight 3
+Transaction: 2 @ 8.0 in Good Hotel 4
+
+=============================================
+Auction 15 closed
+Day: 4
+Type: Good Hotel 4
+Price: 8.0
+=============================================
+
+Transaction: 2 @ 382.0 in Inflight 4
+Transaction: 2 @ 86.0 in Good Hotel 3
+
+=============================================
+Auction 14 closed
+Day: 3
+Type: Good Hotel 3
+Price: 86.0
+=============================================
+
+Transaction: 2 @ 418.0 in Inflight 3
+Transaction: 2 @ 352.0 in Outflight 4
+
+=============================================
+Auction 10 closed
+Day: 3
+Type: Cheap Hotel 3
+Price: 0.0
+=============================================
+
+
+=============================================
+Auction 8 closed
+Day: 1
+Type: Cheap Hotel 1
+Price: 0.0
+=============================================
+
+
+=============================================
+Auction 9 closed
+Day: 2
+Type: Cheap Hotel 2
+Price: 40.0
+=============================================
+
+Transaction: 2 @ 5.0 in Good Hotel 1
+
+=============================================
+Auction 12 closed
+Day: 1
+Type: Good Hotel 1
+Price: 5.0
+=============================================
+
+Transaction: 2 @ 449.0 in Inflight 1
+Transaction: 2 @ 270.0 in Outflight 2
+
+=============================================
+Auction 11 closed
+Day: 4
+Type: Cheap Hotel 4
+Price: 0.0
+=============================================
+
+Client 1's predicted utility: 0 and cost: 0.0
+Client 2's predicted utility: 0 and cost: 0.0
+Client 3's predicted utility: 0 and cost: 0.0
+Client 4's predicted utility: 0 and cost: 0.0
+Client 5's predicted utility: 0 and cost: 0.0
+Client 6's predicted utility: 0 and cost: 0.0
+Client 7's predicted utility: 0 and cost: 0.0
+Client 8's predicted utility: 0 and cost: 0.0
+==========================
+Utility: 0  Cost: 0  Score: 0

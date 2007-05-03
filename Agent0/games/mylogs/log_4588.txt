@@ -1,0 +1,113 @@
+Printing Client info!
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref: A        D    
+Act:         
+HOTEL
+Pref: x  x  x       
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:    A  D       
+Act:         
+HOTEL
+Pref:    x          
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:    A     D    
+Act:         
+HOTEL
+Pref:    x  x       
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:    A  D       
+Act:         
+HOTEL
+Pref:    x          
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:       A  D    
+Act:         
+HOTEL
+Pref:       x       
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:       A  D    
+Act:         
+HOTEL
+Pref:       x       
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref: A        D    
+Act:         
+HOTEL
+Pref: x  x  x       
+Act:         
+
+=================================
+Day:  1  2  3  4  5 
+FLIGHT
+Pref:    A        D 
+Act:         
+HOTEL
+Pref:    x  x  x    
+Act:         
+
+
+=============================================
+Auction 12 closed
+Day: 1
+Type: Good Hotel 1
+Price: 0.0
+=============================================
+
+
+=============================================
+Auction 9 closed
+Day: 2
+Type: Cheap Hotel 2
+Price: 1.0
+=============================================
+
+
+=============================================
+Auction 15 closed
+Day: 4
+Type: Good Hotel 4
+Price: 104.0
+=============================================
+
+
+=============================================
+Auction 13 closed
+Day: 2
+Type: Good Hotel 2
+Price: 121.0
+=============================================
+
+
+=============================================
+Auction 14 closed
+Day: 3
+Type: Good Hotel 3
+Price: 2.0
+=============================================
+

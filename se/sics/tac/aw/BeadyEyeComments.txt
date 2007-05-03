@@ -1,0 +1,126 @@
+/**
+ * TAC AgentWare
+ * http://www.sics.se/tac        tac-dev@sics.se
+ *
+ * Copyright (c) 2001-2005 SICS AB. All rights reserved.
+ *
+ * SICS grants you the right to use, modify, and redistribute this
+ * software for noncommercial purposes, on the conditions that you:
+ * (1) retain the original headers, including the copyright notice and
+ * this text, (2) clearly document the difference between any derived
+ * software and the original, and (3) acknowledge your use of this
+ * software in pertaining publications and reports.  SICS provides
+ * this software "as is", without any warranty of any kind.  IN NO
+ * EVENT SHALL SICS BE LIABLE FOR ANY DIRECT, SPECIAL OR INDIRECT,
+ * PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSSES OR DAMAGES ARISING OUT
+ * OF THE USE OF THE SOFTWARE.
+ *
+ * -----------------------------------------------------------------
+ *
+ * Author  : Joakim Eriksson, Niclas Finne, Sverker Janson
+ * Created : 23 April, 2002
+ * Updated : $Date: 2005/06/07 19:06:16 $
+ *	     $Revision: 1.1 $
+ * ---------------------------------------------------------
+ * DummyAgent is a simplest possible agent for TAC. It uses
+ * the TACAgent agent ware to interact with the TAC server.
+ *
+ * Important methods in TACAgent:
+ *
+ * Retrieving information about the current Game
+ * ---------------------------------------------
+ * int getGameID()
+ *  - returns the id of current game or -1 if no game is currently plaing
+ *
+ * getServerTime()
+ *  - returns the current server time in milliseconds
+ *
+ * getGameTime()
+ *  - returns the time from start of game in milliseconds
+ *
+ * getGameTimeLeft()
+ *  - returns the time left in the game in milliseconds
+ *
+ * getGameLength()
+ *  - returns the game length in milliseconds
+ *
+ * int getAuctionNo()
+ *  - returns the number of auctions in TAC
+ *
+ * int getClientPreference(int client, int type)
+ *  - returns the clients preference for the specified type
+ *   (types are TACAgent.{ARRIVAL, DEPARTURE, HOTEL_VALUE, E1, E2, E3}
+ *
+ * int getAuctionFor(int category, int type, int day)
+ *  - returns the auction-id for the requested resource
+ *   (categories are TACAgent.{CAT_FLIGHT, CAT_HOTEL, CAT_ENTERTAINMENT
+ *    and types are TACAgent.TYPE_INFLIGHT, TACAgent.TYPE_OUTFLIGHT, etc)
+ *
+ * int getAuctionCategory(int auction)
+ *  - returns the category for this auction (CAT_FLIGHT, CAT_HOTEL,
+ *    CAT_ENTERTAINMENT)
+ *
+ * int getAuctionDay(int auction)
+ *  - returns the day for this auction.
+ *
+ * int getAuctionType(int auction)
+ *  - returns the type for this auction (TYPE_INFLIGHT, TYPE_OUTFLIGHT, etc).
+ *
+ * int getOwn(int auction)
+ *  - returns the number of items that the agent own for this
+ *    auction
+ *
+ * Submitting Bids
+ * ---------------------------------------------
+ * void submitBid(Bid)
+ *  - submits a bid to the tac server
+ *
+ * void replaceBid(OldBid, Bid)
+ *  - replaces the old bid (the current active bid) in the tac server
+ *
+ *   Bids have the following important methods:
+ *    - create a bid with new Bid(AuctionID)
+ *
+ *   void addBidPoint(int quantity, float price)
+ *    - adds a bid point in the bid
+ *
+ * Help methods for remembering what to buy for each auction:
+ * ----------------------------------------------------------
+ * int getAllocation(int auctionID)
+ *   - returns the allocation set for this auction
+ * void setAllocation(int auctionID, int quantity)
+ *   - set the allocation for this auction
+ *
+ *
+ * Callbacks from the TACAgent (caused via interaction with server)
+ *
+ * bidUpdated(Bid bid)
+ *  - there are TACAgent have received an answer on a bid query/submission
+ *   (new information about the bid is available)
+ * bidRejected(Bid bid)
+ *  - the bid has been rejected (reason is bid.getRejectReason())
+ * bidError(Bid bid, int error)
+ *  - the bid contained errors (error represent error status - commandStatus)
+ *
+ * quoteUpdated(Quote quote)
+ *  - new information about the quotes on the auction (quote.getAuction())
+ *    has arrived
+ * quoteUpdated(int category)
+ *  - new information about the quotes on all auctions for the auction
+ *    category has arrived (quotes for a specific type of auctions are
+ *    often requested at once).
+
+ * auctionClosed(int auction)
+ *  - the auction with id "auction" has closed
+ *
+ * transaction(Transaction transaction)
+ *  - there has been a transaction
+ *
+ * gameStarted()
+ *  - a TAC game has started, and all information about the
+ *    game is available (preferences etc).
+ *
+ * gameStopped()
+ *  - the current game has ended
+ *
+ */
