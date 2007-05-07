@@ -1,6 +1,7 @@
 package se.sics.tac.aw;
 import se.sics.tac.util.ArgEnumerator;
 import java.util.logging.*;
+import java.util.*;
 
 public class BeadyEyeAgent extends AgentImpl
 {
@@ -31,18 +32,86 @@ public class BeadyEyeAgent extends AgentImpl
 		//calculateAllocation();
 		//sendBids();
 
+		// find out owned Entertainment
+		OUT.println("Entertainment!");
+		for(int a=0; a<TACAgent.getAuctionNo(); a++)
+		{
+			int category = agent.getAuctionCategory(a);
+			int day = agent.getAuctionDay(a);
+			int type = agent.getAuctionType(a);
+
+			if(category == TACAgent.CAT_ENTERTAINMENT)
+			{
+				int owns = agent.getOwn(a);
+				OUT.println("Auction "+a+" owns "+owns);
+				
+				OUT.println(" Owns "+owns+" tickets to "+agent.getAuctionTypeAsString(a)+" on day "+day);
+				
+				for(int c=0; c<Constants.NUM_CLIENTS; c++)
+				{
+					if(owns <= 0)
+						break;
+
+					if(client[c].doYouWant(category, type, day, 5))
+					{
+						OUT.println("  Allocated to Client " + client[c].number());
+						owns--;
+					}
+				}
+				if(owns > 0)
+				{
+					// do something with unallocated bookings
+					// put in Vector<Booking> unallocated;
+
+					Bid bid = new Bid(a);
+					bid.addBidPoint(-owns, 80);
+					agent.submitBid(bid);
+				}
+			}
+		}
+
+		getMoreEntertainment();
+
 		initialBids();
+	}
+
+	public void getMoreEntertainment()
+	{
+		for(int c=0; c<Constants.NUM_CLIENTS; c++)
+		{
+			if(client[c].needsMoreEntertainment())
+			{
+				Entertainment ent = client[c].getBestEntertainment();
+				int day = ent.day();
+				int type = ent.type();
+				float price = ent.price();
+
+				int auction = agent.getAuctionFor(TACAgent.CAT_ENTERTAINMENT, type, day);
+
+				Bid bid = new Bid(auction);
+				bid.addBidPoint(1, price);
+				agent.submitBid(bid);
+			}
+		}
 	}
 
 	public void gameStopped()
 	{
 		log.fine("Game Stopped!");
+
+		
+		for(int c = 0; c < Constants.NUM_CLIENTS; c++)
+		{
+			OUT.println();
+			OUT.println("*** Client " + client[c].number() +" ***");
+			OUT.println(this.client[c].scheduleGrid());
+		}
 		
 		// print out utility and cost information for all clients
 		int utility = 0, cost = 0;
 		for(int c = 0; c < Constants.NUM_CLIENTS; c++)
 		{
-			OUT.println("Client " + (c+1) + "'s predicted utility: " + client[c].utility() + " and cost: " + client[c].cost());
+			OUT.println("Client " + client[c].number() + "'s predicted utility: " + client[c].utility() + " and cost: " + client[c].cost());
 			utility += client[c].utility();
 			cost += client[c].cost();
 		}
@@ -61,30 +130,41 @@ public class BeadyEyeAgent extends AgentImpl
 		int type = agent.getAuctionType(auction);
 		int day = agent.getAuctionDay(auction);
 		float price = quote.getAskPrice();
+		float bidPrice = quote.getBidPrice();
 
 		switch(category)
 		{
-			case TACAgent.CAT_FLIGHT:	flights.quoteUpdated(new Flight(day, type, price));
-										break;
-			case TACAgent.CAT_HOTEL:	OUT.println("= Bidding for cheap hotels!");
-										Bid bid = new Bid(auction);
-										if(price == 0)
-										{
-											bid.addBidPoint(2, 10);
-											bid.addBidPoint(3, 5);
-											bid.addBidPoint(4, 2);
-										}
-										else if(price <= 10)
-										{
-											bid.addBidPoint(1, 20);
-											bid.addBidPoint(1, 15);
-											bid.addBidPoint(2, 10);
-											bid.addBidPoint(2, 5);
-										}
-										agent.submitBid(bid);
-										break;
+			case TACAgent.CAT_FLIGHT:			flights.quoteUpdated(new Flight(day, type, price));
+												break;
+			case TACAgent.CAT_HOTEL:			/*OUT.println("= Bidding for cheap hotels!");
+												Bid bid = new Bid(auction);
+												if(price == 0)
+												{
+													bid.addBidPoint(2, 10);
+													bid.addBidPoint(3, 5);
+													bid.addBidPoint(4, 2);
+												}
+												else if(price <= 10)
+												{
+													bid.addBidPoint(1, 20);
+													bid.addBidPoint(1, 15);
+													bid.addBidPoint(2, 10);
+													bid.addBidPoint(2, 5);
+												}
+												agent.submitBid(bid);*/
+												break;
+			case TACAgent.CAT_ENTERTAINMENT:	if(bidPrice > 200)
+												{
+													OUT.println("----- Selling over-priced entertainment! -----");
+													Bid bid = new Bid(auction);
+													bid.addBidPoint(-1, bidPrice+1);
+													agent.submitBid(bid);
+												}
+												break;
 			default:	break;
 		}
+		
+
 
 		/*if (auctionCategory == TACAgent.CAT_HOTEL)
 		{
@@ -161,9 +241,20 @@ public class BeadyEyeAgent extends AgentImpl
 		OUT.println("=============================================");
 		OUT.println();
 
-		if(category == TACAgent.CAT_HOTEL)
+		/*if(category == TACAgent.CAT_HOTEL)
 		{
 			// look to buy cheap hotels!
+			OUT.println();
+			OUT.println("$$$ Minutely Client Package Update $$$");
+			for(int c=0; c<Constants.NUM_CLIENTS; c++)
+				OUT.println(this.client[c].scheduleGrid());
+			OUT.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			OUT.println();
+		}*/
+
+		if(category == TACAgent.CAT_HOTEL)
+		{
+			getMoreEntertainment();
 		}
 	}
 
@@ -177,7 +268,22 @@ public class BeadyEyeAgent extends AgentImpl
 		int quantity = t.getQuantity();
 		float price = t.getPrice();
 
+		OUT.println();
+		OUT.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
 		OUT.println("Transaction: " + quantity + " @ " + t.getPrice() + " in " + s);
+
+		// order so allocated to those most likely to need it
+		this.resortClients(this.client);
+		/*for(int c=0; c < Constants.NUM_CLIENTS; c++)
+		{
+			OUT.print(" "+c+" is "+client[c].number()+" "+client[c].nights()+" nights and "+
+						(client[c].hasCompleteHotelPackage()?"a complete":"an incomplete")+" hotel package and ");
+					if(client[c].hasFlightIn() && client[c].hasFlightOut()) OUT.println("both flights.");
+					else if(client[c].hasFlightOut()) OUT.println("an out flight.");
+					else if(client[c].hasFlightIn()) OUT.println("an in flight.");
+					else OUT.println("no flights.");
+		}*/
 
 		// allocate to clients
 		// for loop all transaction history
@@ -187,12 +293,17 @@ public class BeadyEyeAgent extends AgentImpl
 		int unalloc_quantity = quantity;
 		for(int c=0; c < Constants.NUM_CLIENTS; c++)
 		{
-			if(client[c].doYouWant(category, type, day, price))
+			// do this if inside the client?
+			if(category == TACAgent.CAT_HOTEL || (category == TACAgent.CAT_FLIGHT && client[c].hasCompleteHotelPackage()) || 
+				(category == TACAgent.CAT_ENTERTAINMENT && client[c].hasFlightIn() && client[c].hasFlightOut()))
 			{
-				OUT.println("Allocated to Client " + (c+1));
-				unalloc_quantity--;
-				if(unalloc_quantity <= 0)
-					break;
+				if(client[c].doYouWant(category, type, day, price))
+				{
+					OUT.println(" Allocated to Client " + client[c].number());
+					unalloc_quantity--;
+					if(unalloc_quantity <= 0)
+						break;
+				}
 			}
 		}
 
@@ -202,23 +313,36 @@ public class BeadyEyeAgent extends AgentImpl
 			// put in Vector<Booking> unallocated;
 		}
 
+		// incorporate this into client loop above?
+
+
 
 		// if client have full hotel roster, order flights
 		for(int c=0; c < Constants.NUM_CLIENTS; c++)
 		{
 			if(client[c].hasCompleteHotelPackage())
 			{
-				OUT.println("Client " + (c+1) + " has a complete hotel package!");
+				//OUT.println("Client " + client[c].number() + " has a complete hotel package!");
+				//OUT.println(this.client[c].scheduleGrid());
 				// book flights
-				if(!client[c].hasFlightIn())
-					flights.pleaseBuy(quantity, TACAgent.TYPE_INFLIGHT, client[c].start());
-				if(!client[c].hasFlightOut())
-					flights.pleaseBuy(quantity, TACAgent.TYPE_OUTFLIGHT, client[c].end());
+				if(!client[c].hasFlightIn() && !client[c].awaitingFlightIn())
+				{
+					/OUT.println(" Buying in flight");
+					flights.pleaseBuy(1, TACAgent.TYPE_INFLIGHT, client[c].start());
+					client[c].hasOrderedFlight(TACAgent.TYPE_INFLIGHT);
+				}
+				else if(!client[c].hasFlightOut() && !client[c].awaitingFlightOut())
+				{
+					//OUT.println(" Buying out flight");
+					flights.pleaseBuy(1, TACAgent.TYPE_OUTFLIGHT, client[c].end());
+					client[c].hasOrderedFlight(TACAgent.TYPE_OUTFLIGHT);
+				}
+				else
+				{
+					//OUT.println(" Client "+client[c].number()+" - HI:"+client[c].hasFlightIn()+" AI:"+client[c].awaitingFlightIn()+" HO:"+client[c].hasFlightOut()+" AO:"+client[c].awaitingFlightOut());
+				}
 			}
 		}
-
-		// incorporate this into client loop above?
-
 
 		// if just doing single nights, do this:
 		/*if(category == TACAgent.CAT_HOTEL)
@@ -226,8 +350,16 @@ public class BeadyEyeAgent extends AgentImpl
 			flights.pleaseBuy(quantity, TACAgent.TYPE_INFLIGHT, day);
 			flights.pleaseBuy(quantity, TACAgent.TYPE_OUTFLIGHT, day+1);
 		}*/
+		
+		OUT.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		OUT.println();
 	}
 
+
+	private void resortClients(Client[] c)
+	{
+		Arrays.sort(c, Collections.reverseOrder());
+	}
 
 
 	private void createClients()
@@ -243,14 +375,14 @@ public class BeadyEyeAgent extends AgentImpl
 			int E2 = agent.getClientPreference(c, TACAgent.E2);
 			int E3 = agent.getClientPreference(c, TACAgent.E3);
 
-			this.client[c] = new Client(preferredStartDay, preferredEndDay, hotelUpgradePremium, E1, E2, E3);
+			this.client[c] = new Client(c, preferredStartDay, preferredEndDay, hotelUpgradePremium, E1, E2, E3);
 			OUT.println();
-			OUT.println("*** Client " + (c+1) +" ***");
+			//OUT.println("*** Client " + client[c].number() +" ***");
 			OUT.println(this.client[c].scheduleGrid());
 		}
 	}
 
-
+	public static final int UTILITY_FOR_HOTEL = 1000;
 
 	private void initialBids()
 	{
@@ -266,19 +398,86 @@ public class BeadyEyeAgent extends AgentImpl
 				hb[t][d] = new Bid(auction);
 			}
 		}
+		double f[][] =	{
+							{1.00},						// nights() == 1
+							{0.50, 0.50},				// nights() == 2
+							{0.50, 0.35, 0.15},			// nights() == 3
+							{0.40, 0.30, 0.20, 0.10},	// nights() == 4
+						};
 		// create bids
 		for(int c = 0; c < Constants.NUM_CLIENTS; c++)
 		{
-			if(client[c].nights() == 1)
+			if(client[c].nights() <= 4)
 			{
-				/*int auction = agent.getAuctionFor(TACAgent.CAT_HOTEL, client[c].hotelType(), client[c].start());
-				Bid bid = new Bid(auction);*/
-				hb[client[c].hotelType()][client[c].start()].addBidPoint(1, 1000 + client[c].hotelPremium());
+				OUT.println(""+client[c].nights()+" nights");
+				for(int d = client[c].start(); d < client[c].end(); d++)
+				{
+					int price = (int)(f[client[c].nights()-1][d - client[c].start()] * UTILITY_FOR_HOTEL) + client[c].hotelPerNightPremium();
+
+					hb[client[c].hotelType()][d].addBidPoint(1, price);
+
+					OUT.println(" Bidding in auction " + hb[client[c].hotelType()][d].getAuction() +
+						" " + price + " for " +
+						((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + d);
+				}
+			}
+			/*if(client[c].nights() == 1)
+			{
+				//int auction = agent.getAuctionFor(TACAgent.CAT_HOTEL, client[c].hotelType(), client[c].start());
+				//Bid bid = new Bid(auction);
+				int price = UTILITY_FOR_HOTEL + client[c].hotelPerNightPremium();
+				hb[client[c].hotelType()][client[c].start()].addBidPoint(1, price);
 				//agent.submitBid(bid);
 				OUT.println("Bidding in auction " + hb[client[c].hotelType()][client[c].start()].getAuction() +
-					" $" + (1000 + client[c].hotelPremium()) + " for " +
+					" $" + price + " for " +
 					((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + client[c].start());
 			}
+			else if(client[c].nights() == 2)
+			{
+				for(int d = client[c].start(); d < client[c].end(); d++)
+				{
+					int price = (UTILITY_FOR_HOTEL/2) + client[c].hotelPerNightPremium();
+					hb[client[c].hotelType()][d].addBidPoint(1, price);
+					OUT.println("Bidding in auction " + hb[client[c].hotelType()][client[c].start()].getAuction() +
+						" $" + price + " for " +
+						((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + client[c].start());
+				}
+			}
+			else if(client[c].nights() == 3)
+			{
+				double fraction[] = {0.50, 0.35, 0.15};
+				for(int d = client[c].start(); d < client[c].end(); d++)
+				{
+					int price = (int)(fraction[d - client[c].start()] * UTILITY_FOR_HOTEL) + client[c].hotelPerNightPremium();
+					hb[client[c].hotelType()][d].addBidPoint(1, price);
+					OUT.println("Bidding in auction " + hb[client[c].hotelType()][client[c].start()].getAuction() +
+						" $" + price + " for " +
+						((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + client[c].start());
+				}
+			}
+			else if(client[c].nights() == 4)
+			{
+				double fraction[] = {0.40, 0.30, 0.20, 0.10};
+				for(int d = client[c].start(); d < client[c].end(); d++)
+				{
+					int price = (int)(fraction[d - client[c].start()] * UTILITY_FOR_HOTEL) + client[c].hotelPerNightPremium();
+					hb[client[c].hotelType()][d].addBidPoint(1, price);
+					OUT.println("Bidding in auction " + hb[client[c].hotelType()][d].getAuction() +
+						" $" + price + " for " +
+						((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + d);
+				}
+			}*/
+			/*else
+			{
+				for(int d = client[c].start(); d < client[c].end(); d++)
+				{
+					int price = (UTILITY_FOR_HOTEL/client[c].nights()) + client[c].hotelPerNightPremium();
+					hb[client[c].hotelType()][d].addBidPoint(1, price);
+					OUT.println("Bidding in auction " + hb[client[c].hotelType()][client[c].start()].getAuction() +
+						" $" + price + " for " +
+						((client[c].hotelType() == TACAgent.TYPE_GOOD_HOTEL)?"good":"cheap") + " hotel on Day " + client[c].start());
+				}
+			}*/
 		}
 		// submit bids
 		for(int t=0; t<2; t++)
@@ -289,6 +488,13 @@ public class BeadyEyeAgent extends AgentImpl
 					agent.submitBid(hb[t][d]);
 			}
 		}
+
+		// sell entertainment at more than 200 to see if anyone is silly enough to buy it!
+		/*for(int a=TACAgent.MIN_ENTERTAINMENT; a<=TACAgent.MAX_ENTERTAINMENT; a++)
+		{
+			Bid bid = new Bid(a);
+			bid.addBidPoint(-10, 210);
+		}*/
 	}
 
 
