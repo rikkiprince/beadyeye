@@ -311,7 +311,7 @@ public class Client implements Comparable
 
 	private int pickHotelTypeOnPremium()
 	{
-		if((this.hotelUpgradePremium/nights()) > 75)	// calculate this based on stats - how much more is good hotel normally?
+		if((this.hotelUpgradePremium/nights()) > 50)	// calculate this based on stats - how much more is good hotel normally?
 			return TACAgent.TYPE_GOOD_HOTEL;
 		else
 			return TACAgent.TYPE_CHEAP_HOTEL;

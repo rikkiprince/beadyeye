@@ -156,9 +156,9 @@ public class BeadyEyeAgent extends AgentImpl
 			case TACAgent.CAT_ENTERTAINMENT:	if(bidPrice > 200)
 												{
 													OUT.println("----- Selling over-priced entertainment! -----");
-													Bid bid = new Bid(auction);
-													bid.addBidPoint(-1, bidPrice+1);
-													agent.submitBid(bid);
+													Bid bide = new Bid(auction);
+													bide.addBidPoint(-1, bidPrice+1);
+													agent.submitBid(bide);
 												}
 												break;
 			default:	break;
@@ -327,7 +327,7 @@ public class BeadyEyeAgent extends AgentImpl
 				// book flights
 				if(!client[c].hasFlightIn() && !client[c].awaitingFlightIn())
 				{
-					/OUT.println(" Buying in flight");
+					//OUT.println(" Buying in flight");
 					flights.pleaseBuy(1, TACAgent.TYPE_INFLIGHT, client[c].start());
 					client[c].hasOrderedFlight(TACAgent.TYPE_INFLIGHT);
 				}
