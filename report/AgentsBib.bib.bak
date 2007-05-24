@@ -1,0 +1,43 @@
+This file was created with JabRef 2.2.
+Encoding: Cp1252
+
+@MISC{,
+  author = {SICS},
+  title = {TAC Classic Software},
+  howpublished = {Website},
+  note = {Last Accessed: 22 May 2007},
+  owner = {rprince},
+  timestamp = {2007.05.22},
+  url = {http://www.sics.se/tac/page.php?id=12}
+}
+
+@MISC{SICS2007a,
+  author = {SICS},
+  title = {Trading Agent Competition},
+  howpublished = {Website},
+  year = {2007},
+  note = {Last Accessed: 22 May 2007},
+  owner = {rprince},
+  timestamp = {2007.05.22},
+  url = {http://www.sics.se/tac/page.php?id=2}
+}
+
+@MISC{SICS2007b,
+  author = {SICS},
+  title = {TAC Game Description},
+  howpublished = {Website},
+  year = {2007},
+  note = {Last accessed: 22 May 2007},
+  owner = {rprince},
+  timestamp = {2007.05.22},
+  url = {http://www.sics.se/tac/page.php?id=3}
+}
+
+@comment{jabref-meta: selector_publisher:}
+
+@comment{jabref-meta: selector_author:}
+
+@comment{jabref-meta: selector_journal:}
+
+@comment{jabref-meta: selector_keywords:}
+

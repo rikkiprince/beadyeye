@@ -1,0 +1,204 @@
+% THIS IS SIGPROC-SP.TEX - VERSION 2.9
+% WORKS WITH V3.0SP OF ACM_PROC_ARTICLE-SP.CLS
+% MARCH 2007
+%
+% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.0SP
+% LaTeX2e document class file for Conference Proceedings submissions.
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V3.0SP) *DOES NOT* produce:
+%       1) The Permission Statement
+%       2) The Conference (location) Info information
+%       3) The Copyright Line with ACM data
+%       4) Page numbering
+% ---------------------------------------------------------------------------------------------------------------
+% It is an example which *does* use the .bib file (from which the .bbl file
+% is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission,
+% you need to 'insert'  your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+% Questions regarding SIGS should be sent to
+% Adrienne Griscti ---> griscti@acm.org
+%
+% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
+% Gerald Murray ---> murray@acm.org
+%
+% For tracking purposes - this is V2.9SP - MARCH 2007
+
+\documentclass{acm_proc_article-sp}
+
+%-- Begin patch area for accents in 'Author Block' area - may be needed by some authors / but not all
+\DeclareFixedFont{\auacc}{OT1}{phv}{m}{n}{12}   % Needed for "Author Block" accents - Patch by Gerry 3/21/07
+\DeclareFixedFont{\afacc}{OT1}{phv}{m}{n}{10}   % Needed for "Author Block" accents in the affiliation/address line - Patch by Gerry 3/21/07
+%--
+\begin{document}
+
+\title{COMP6006: Intelligent Agents Report}
+ \subtitle{The BeadyEye Agent
+%\titlenote{A full version of this paper is available as
+%\textit{Author's Guide to Preparing ACM SIG Proceedings Using
+%\LaTeX$2_\epsilon$\ and BibTeX} at \texttt{www.acm.org/eaddress.htm}}
+}
+%
+% You need the command \numberofauthors to handle the 'placement
+% and alignment' of the authors beneath the title.
+%
+% For aesthetic reasons, we recommend 'three authors at a time'
+% i.e. three 'name/affiliation blocks' be placed beneath the title.
+%
+% NOTE: You are NOT restricted in how many 'rows' of
+% "name/affiliations" may appear. We just ask that you restrict
+% the number of 'columns' to three.
+%
+% Because of the available 'opening page real-estate'
+% we ask you to refrain from putting more than six authors
+% (two rows with three columns) beneath the article title.
+% More than six makes the first-page appear very cluttered indeed.
+%
+% Use the \alignauthor commands to handle the names
+% and affiliations for an 'aesthetic maximum' of six authors.
+% Add names, affiliations, addresses for
+% the seventh etc. author(s) as the argument for the
+% \additionalauthors command.
+% These 'additional authors' will be output/set for you
+% without further effort on your part as the last section in
+% the body of your article BEFORE References or any Appendices.
+
+\numberofauthors{1} %  in this sample file, there are a *total*
+% of EIGHT authors. SIX appear on the 'first-page' (for formatting
+% reasons) and the remaining two appear in the \additionalauthors section.
+%
+\author{
+% You can go ahead and credit any number of authors here,
+% e.g. one 'row of three' or two rows (consisting of one row of three
+% and a second row of one, two or three).
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor
+Rikki Prince\\
+       \affaddr{University of Southampton}\\
+       \affaddr{Highfield}\\
+       \affaddr{Southampton, UK}\\
+       \email{rfp102@soton.ac.uk}
+}
+% There's nothing stopping you putting the seventh, eighth, etc.
+% author on the opening page (as the 'third row') but we ask,
+% for aesthetic reasons that you place these 'additional authors'
+% in the \additional authors block, viz.
+%\additionalauthors{Additional authors: John Smith (The Th{\o}rv\"{a}ld Group,
+%email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+%(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+\date{}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+\maketitle
+
+\begin{abstract}
+ %%%%%%%%%%%%
+ % ABSTRACT %
+ %%%%%%%%%%%%
+ This is the abstract of my report.
+\end{abstract}
+
+% A category with the (minimum) three required fields
+%\category{H.4}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+%\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+
+%\terms{Delphi theory}
+
+%\keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
+
+\section{Introduction}
+
+ This report describes the approach taken in creating a software agent to compete in a TAC Classic contest hosted at the University of Southampton for the module COMP6006.
+ 
+ \subsection{TAC}
+ The Trading Agent Competition (TAC) is an annual contest organised by, and for, the agent research community, since 2002.  The hope is that by fostering a competetive spirit, the advancement of the field will be accelerated.  The competition current consists of two scenarios: TAC Classic and TAC SCM \cite{SICS2007a}.
+ 
+ It is the TAC Classic scenario which was faced in this challenge.  This scenario involves acting as a ``travel agent", to create holiday packages to suit the requirements of a group of eight customers.  A holiday package consists of inbound and outbound flights, a hotel room for each night of the stay and tickets to entertainment venues.  Further complexity is added by the fact that there are two hotels to choose from and three entertainment venues.  In total, the agent is required to co-ordinate bidding strategies in up to 28 different auctions.
+ 
+ The auctions also vary in format.  The flight auctions clear instantly, but have a sell price which varies every 10 seconds, based on a stochastic function.  An auction is held for each night, in each hotel, though only 16 rooms are available per hotel.  Therefore the auction is an ascending-price, multi-unit English auction.  The quirk is that one hotel auction closes every minute, in a randomly selected order.  Finally, entertainment auctions allow agents to buy and sell tickets from each other once they negotiate a price \cite{SICS2007b}.
+ 
+ Bidding in auctions is performed by sending bid strings to the TAC server, containing the number of items required and the price the agent is willing to pay.  Fortunately, the process of submitting bids and retrieving information about the clients' preferences and current state of the auctions is made slightly easier by the TAC Classic Java Agent Ware \cite{SICE2007c}.
+ 
+ At the end of a TAC game, the competing agents are ranked against each other based on how well they fulfilled their clients' requirements.  The measure of fulfillment is known as the utility, and is based upon how close the package is to the clients' preferred start and end dates, as well as whether the package matches the quality of hotel the client wanted and includes their favoured entertainment.  The final score for the agent is the total utility, minus the costs of purchasing the various items which make up the packages.
+ 
+ \subsection{The running of the Soton contest}
+ 
+ The contest held for the COMP6006 module ran over two days.  Entrants competed on one of the two days, against up to 25 others.  However, as each game only allows for eight competitors at a time, the two days were arranged so that each agent would compete in around 10-15 games, against a different group of opponents in each game.
+ 
+\section{Approach}
+
+ The initial aproach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code were more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
+ \begin{verbatim}
+  agent.getClientPreference(c, TACAgent.ARRIVAL);
+ \end{verbatim}
+ Once the agent logic becomes more complex, calling this line of code just to find a client's preferred arrival day could make the code complicated to read.  The intended alternative is to create an object for each client, which provides a method for requesting the arrival day, as well as all other preferences, for example:
+ \begin{verbatim}
+  client[c].start();
+ \end{verbatim}
+ The added advantage of this approach is that certain decisions and calculations can be performed within the confines of the object, rather than in some arbitrary place within the agent.  For instance, one of the important tasks that can be processed within the client object is to allocate hotel rooms, flights and entertainment tickets that have been won, and therefore provisionally calculate the utility and cost of a particular client's package.
+ 
+ As well as the client, other concepts within the TAC contest that can be compartmentalised into an object are the flight, hotel and entertainment auctions.
+
+\section{Design}
+
+ As discussed above, the approach taken was to construct objects for storing the available data in a more logical format.  This section describes the design of the classes that store and process this data.  These classes work on top of the Agent Ware code, the design of which is not examined here.
+ 
+ \subsection{Client}
+  The primary abstraction from the data provided by the Agent Ware is that of the client.  The client is the main focus of the agent's efforts, so it makes sense to encapsulate some of the decision-making functionality of the agent within a client object.
+  
+  Within this agent, the Client had to be designed to store both the original client preferences, and any updated preferences that result from changes within the game environment.  Once a hotel auction closes, if the agent did not win the required number of rooms for that night, the client's preferred package could become invalid, and hence the requirements of that client would have to change.  Additionally, the Client must keep track of any rooms, flights or entertainment tickets which have been allocated to it, and how much they cost to purchase.
+  
+  \subsection{Flights}
+
+\section{Heuristics}
+
+\section{Results}
+ The agent describe in this report finished 17th out of twenty-three competitors on the day it competed.  If the results of the second day of competition are included, the agent ranks at 28th out of forty-eight, though this may not be a fair comparison as it did not play any TAC games against the competitors of the second day.
+
+\section{Evaluation}
+
+
+\section{Conclusions}
+This paragraph will end the body of this sample document.
+Remember that you might still have Acknowledgments or
+Appendices; brief samples of these
+follow.  There is still the Bibliography to deal with; and
+we will make a disclaimer about that here: with the exception
+of the reference to the \LaTeX\ book, the citations in
+this paper are to articles which have nothing to
+do with the present subject and are used as
+examples only.
+%\end{document}  % This is where a 'short' article might terminate
+
+%ACKNOWLEDGMENTS are optional
+\section{Acknowledgments}
+PV for help.
+
+%
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+\balancecolumns
+% That's all folks!
+\end{document}
