@@ -102,6 +102,8 @@ Rikki Prince\\
 
 \maketitle
 
+\pagenumbering{arabic}
+
 \begin{abstract}
  %%%%%%%%%%%%
  % ABSTRACT %
@@ -228,7 +230,7 @@ Rikki Prince\\
   \end{tabular*}
  \end{center}
   \caption{Averages of the 8 consistent games.}
-  \label{results}
+  \label{res_anom}
  \end{table}
  
  To add some perspective to these values, it is worth considering the averages of another agent that competed on the same day.  For this purpose, the scores of the agent supplied by the University of Southampton TAC team, Dolphin, and the top two student agents were selected, and can be seen in Table~\ref{top3}.
@@ -251,7 +253,9 @@ Rikki Prince\\
  \end{table}
  
 \section{Evaluation}
+ Comparing the scores of the agent (disregarding the anomolous results) in Table~\ref{res_anom} with those of the top 3 agents in the competition (Table~\ref{top3}) gives a clue as to why this agent did not perform as well as others.  Firstly, the average utility gained was not as high, falling some 600 short of the better agents.  More importantly, however, the costs were significantly higher than the top two agents.
 
+ Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a NullPointerException, which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method getBestEntertainment() returns null.  The code which invokes this method does not check whether the returned object is null before attempting to use it.
 
 \section{Conclusions}
 This paragraph will end the body of this sample document.
