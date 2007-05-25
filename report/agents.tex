@@ -137,6 +137,8 @@ Rikki Prince\\
  
  The contest held for the COMP6006 module ran over two days.  Entrants competed on one of the two days, against up to 25 others.  However, as each game only allows for eight competitors at a time, the two days were arranged so that each agent would compete in around 10-15 games, against a different group of opponents in each game.
  
+ To vary the level of the competition, and provide somewhat of a benchmark, the agent which finished second in the 2005 actual TAC contest, ``Dolphin", and the DummyAgent provided in the Agent Ware, were both included as competitors.
+ 
 \section{Approach}
 
  The initial aproach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code were more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
@@ -150,6 +152,16 @@ Rikki Prince\\
  The added advantage of this approach is that certain decisions and calculations can be performed within the confines of the object, rather than in some arbitrary place within the agent.  For instance, one of the important tasks that can be processed within the client object is to allocate hotel rooms, flights and entertainment tickets that have been won, and therefore provisionally calculate the utility and cost of a particular client's package.
  
  As well as the client, other concepts within the TAC contest that can be compartmentalised into an object are the flight, hotel and entertainment auctions.
+ 
+ Within the agent, the flow of activity expected to occur is as follows:
+ \begin{enumerate}
+  \item Allocate initial entertainment to clients if they require them.
+  \item Submit initial bids for hotel rooms.
+  \item Upon a transaction, allocate item won to client that requires it.
+   \begin{itemize}
+    \item If client has all the hotel rooms it needs, purchase flights.
+   \end{itemize}
+ \end{enumerate}
 
 \section{Design}
 
@@ -161,12 +173,83 @@ Rikki Prince\\
   Within this agent, the Client had to be designed to store both the original client preferences, and any updated preferences that result from changes within the game environment.  Once a hotel auction closes, if the agent did not win the required number of rooms for that night, the client's preferred package could become invalid, and hence the requirements of that client would have to change.  Additionally, the Client must keep track of any rooms, flights or entertainment tickets which have been allocated to it, and how much they cost to purchase.
   
   \subsection{Flights}
+   The Flights class provides a central place for recording and analysing the flight prices, and hence deciding the best time pruchase the required flights.  As and when a client chooses a definitive day they wish to fly in or out on, the .pleaseBuy() of the Flights object is called to specify the need of a particular flight.  Every time the quote in a flight auction is updated (every 10 seconds), this information is relayed to the Flights object, which records the quote price for trend analysis both in the agent during the game, and in external statistics packages at a later date.  The analysis of the trend when the quote is updated can also trigger a bid for the flight, if the price is determined to be optimal.
 
 \section{Heuristics}
+ \subsection{Initial Hotel Bids}
+  The main heuristic used was to determine the price to bid for hotel rooms.  Firstly, a constant is chosen to determine the total available to spend on hotel rooms over the course of the holiday.  This was initially selected to be 1000, simply based on this being the utility available for putting together a feasible package.
+  
+  This value then has to be split over the number of the days the client wishes to stay.  For a one night stay, this is simple, as the full amount is used.  For two nights, the value was split evenly, as if only one night was won, it does not matter which.  While the same could be done for three and four night stays, splitting the price between so many nights might reduce the likelihood of winning any hotel rooms at all for the client.  Instead, it was decided that a heavier weighting should be placed on one day, and the other nights weighted toward that night accordingly, to improve the odds of winning hotel rooms for consecutive nights.  Therefore, the hotel bid prices ratios for a three night and four night are 50\%:35\%:15\% and 40\%:30\%:20\%:10\%, respectively.
+  
+  Finally, if the client wishes to stay in the better TampaTowers hotel, the bid price per night is increased by the premium the client is willing to pay for the upgrade, again divided by the number of nights.
 
 \section{Results}
  The agent describe in this report finished 17th out of twenty-three competitors on the day it competed.  If the results of the second day of competition are included, the agent ranks at 28th out of forty-eight, though this may not be a fair comparison as it did not play any TAC games against the competitors of the second day.
-
+ 
+ \begin{table}		%[htbp]
+ \begin{center}
+%  \centering
+  \begin{tabular*}{0.45\textwidth}{@{\extracolsep{\fill}} c  r  r  r }
+   \hline \\
+   Game No. & Utility & Cost & Score \\
+   \\ \hline \\
+   581 & 8766 & 5576.15 & 3189.85 \\
+   584 & 8878 & 7729.70 & 1148.30 \\
+   586 & 9242 & 5178.00 & 4064.00 \\
+   591 & 8908 & 6239.86 & 2668.14 \\
+   598 & 9500 & 6825.73 & 2674.27 \\
+   599 & 0 & -28.96	& 28.97 \\
+   601 & 9450 & 5206.53 & 4243.47 \\
+   604 & 0 & -159.99	& 160.00 \\
+   608 & 9317 & 7053.23 & 2263.77 \\
+   609 & 9230 & 8635.52 & 594.48 \\ \\
+   \hline \\
+   Average & 7329.10 & 5225.58 & 2103.53 \\ \\
+   \hline
+  \end{tabular*}
+ \end{center}
+  \caption{Results of the 10 games played during the competition.}
+  \label{results}
+ \end{table}
+ 
+ %It appears from the results in Table~\ref{results} that Games 599 and 604 were anomolous to the rest of the data, given that the utility was zero.
+ 
+ The resulting utilities, costs and scores for each game played by this agent during the contest can be seen in Table~\ref{results}.  However, it is immediately noticeable that Games 599 and 604 produced zero utility and a negative cost, which is anomalous to the rest of the results, so most likely indicates that the agent failed to function properly.  If these results are ignored, the averages over the remaining eight games can be seen in Table~\ref{res_anom}.
+ 
+ \begin{table}		%[htbp]
+ \begin{center}
+%  \centering
+  \begin{tabular*}{0.45\textwidth}{@{\extracolsep{\fill}} c  r  r  r }
+   \hline \\
+    & Utility & Cost & Score \\
+   \\ \hline \\
+   Average & 9161.38 & 6555.59 & 2605.79 \\ \\
+   \hline
+  \end{tabular*}
+ \end{center}
+  \caption{Averages of the 8 consistent games.}
+  \label{results}
+ \end{table}
+ 
+ To add some perspective to these values, it is worth considering the averages of another agent that competed on the same day.  For this purpose, the scores of the agent supplied by the University of Southampton TAC team, Dolphin, and the top two student agents were selected, and can be seen in Table~\ref{top3}.
+ 
+ \begin{table}		%[htbp]
+ \begin{center}
+%  \centering
+  \begin{tabular*}{0.45\textwidth}{@{\extracolsep{\fill}} c  r  r  r }
+   \hline \\
+   Agent & Utility & Cost & Score \\
+   \\ \hline \\
+   Dolphin & 9717.7 & 5124.62 & 4593.08 \\
+   tml203 & 9715 & 5485.25 & 4229.75 \\
+   cjl203 & 9848.1 & 6200.25 & 3647.85 \\ \\
+   \hline
+  \end{tabular*}
+ \end{center}
+  \caption{Averages of the top 3 agents.}
+  \label{top3}
+ \end{table}
+ 
 \section{Evaluation}
 
 
