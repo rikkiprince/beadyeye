@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.30.6-2.2 (MiKTeX 2.5) (preloaded format=pdflatex 2007.4.12)  25 MAY 2007 13:52
+This is pdfeTeX, Version 3.141592-1.30.6-2.2 (MiKTeX 2.5) (preloaded format=pdflatex 2007.4.12)  25 MAY 2007 16:35
 entering extended mode
 **C:/Users/rprince/Desktop/DEGREE/Agents/AgentCode/report/agents.tex
 (C:\Users\rprince\Desktop\DEGREE\Agents\AgentCode\report\agents.tex
@@ -235,41 +235,45 @@ LaTeX Warning: Citation `SICS2007c' on page 1 undefined on input line 139.
 File: client2.png Graphic file (type png)
 
 <use client2.png> [2 <client2.png (PNG copy)>] [3]
-Overfull \hbox (8.51636pt too wide) in paragraph at lines 290--291
+Overfull \hbox (8.51636pt too wide) in paragraph at lines 293--294
 \OT1/cmr/m/n/9 Comparing the scores of the agent (dis-re-gard-ing the anomolous
 
  []
 
 
-LaTeX Warning: Citation `Vytelingum2007' on page 4 undefined on input line 298.
+Overfull \hbox (5.9497pt too wide) in paragraph at lines 297--298
+\OT1/cmr/m/n/9 anal-y-sis been im-ple-mented, while the heuris-tics used to cho
+ose
+ []
 
 
-[4
+LaTeX Warning: Citation `Vytelingum2007' on page 4 undefined on input line 303.
+
+
+[4] [5
 
 ] (agents.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 2076 strings out of 95419
- 22758 string characters out of 1187332
- 78583 words of memory out of 1074603
- 5139 multiletter control sequences out of 60000
- 42386 words of font info for 57 fonts, out of 1000000 for 2000
+ 2078 strings out of 95419
+ 22777 string characters out of 1187332
+ 78071 words of memory out of 1074603
+ 5140 multiletter control sequences out of 60000
+ 42731 words of font info for 58 fonts, out of 1000000 for 2000
  14 hyphenation exceptions out of 8191
  39i,11n,26p,847b,260s stack positions out of 5000i,500n,10000p,200000b,32768s
 PDF statistics:
- 35 PDF objects out of 300000
+ 41 PDF objects out of 300000
  0 named destinations out of 300000
  6 words of extra memory for PDF output out of 10000
-<C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program Fil
-es/MiKTeX 2.5/fonts/type1/bluesky/cm/cmtt9.pfb><C:/Program Files/MiKTeX 2.5/fon
-ts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/
-cm/cmr9.pfb>{8r.enc}<C:/Program Files/MiKTeX 2.5/fonts/type1/urw/times/utmb8a.p
-fb><C:/Program Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program
- Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on agents.pdf (4 pages, 99329 bytes).
+<C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmti9.pfb><C:/Program Fil
+es/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program Files/MiKTeX 2.5/fon
+ts/type1/bluesky/cm/cmtt9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/
+cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmr9.pfb>{8r.e
+nc}<C:/Program Files/MiKTeX 2.5/fonts/type1/urw/times/utmb8a.pfb><C:/Program Fi
+les/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files/MiKTeX 2.5
+/fonts/type1/urw/helvetic/uhvb8a.pfb>
+Output written on agents.pdf (5 pages, 111110 bytes).

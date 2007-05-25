@@ -195,8 +195,9 @@ Rikki Prince\\
    The Flights class provides a central place for recording and analysing the flight prices, and hence deciding the best time pruchase the required flights.  As and when a client chooses a definitive day they wish to fly in or out on, the .pleaseBuy() of the Flights object is called to specify the need of a particular flight.  Every time the quote in a flight auction is updated (every 10 seconds), this information is relayed to the Flights object, which records the quote price for trend analysis both in the agent during the game, and in external statistics packages at a later date.  The analysis of the trend when the quote is updated can also trigger a bid for the flight, if the price is determined to be optimal.
    
   \subsection{Supporting Classes}
- \textcolor{red}{FILL THIS IN.}
-   ScreenAndFile and Constants
+   As the standard logging used in the Agent Ware outputs to XML and is difficult to analyse, a supporting class called ``ScreenAndFile" was created to allow one method to be called to print to the standard output and to a file (the name of which is specified in the construtor).  It is also quicker to type \begin{verbatim}  OUT.println("Hello, world!");\end{verbatim} than \begin{verbatim}  System.out.println("Hello, world!");\end{verbatim}
+   
+   A class of static values was also created to store any common constant values that were shared by the various other classes, such as \verb"Constants.FIRST_DAY" and \verb"Constants.NUM_CLIENTS".
 
 \section{Heuristics}
  \label{heurisitics}
@@ -291,13 +292,25 @@ Rikki Prince\\
 
  Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a NullPointerException, which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method getBestEntertainment() returns null.  The code which invokes this method fails to check whether the returned object is null before attempting to use it.
  
+ The relatively consistent utility (varying from the mean by only around 4\%) over the 8 other games indicates that the clients' packages were being fairly successfully created according to their preferences.  This makes sense, as the agent only purchases flights once the hotel package has been completed, and the agent bids quite high amounts for hotels.  However, the larger disparity in the costs (up to 30\% different from the mean) suggests the purchasing strategy was somewhat flawed. In particular, savings could have been made in the purchasing of flights had some form of trend analysis been implemented, while the heuristics used to choose hotel and entertainment bid prices would have benefitted from some fine tuning.
+ 
 \section{Future Improvements}
  \label{future}
  There are a number of tactics which this agent provides a base for, and were planned in the development of this agent but were not implemented in time for the competition.
  
  The Flights class is clearly designed so that the Client can request flights, and the Flight class will handle the responsibility of deciding when the optimal time to bid is and what is likely to be the cheapest price.  As this was not implemented, there is scope for a method to be added to calculate whether the flight price is increasing or decreasing, possibly using least squares regression \cite{Vytelingum2007}.
  
- In a similar manner to the Flights class, an EntertainmentBuyer class could be built that takes requests for certain tickets and trades to try to obtain that ticket.  The strategy could involve providing a maximum price, and the EntertainmentBuyer could bid at lower prices, slowly incrementing as time goes on, until it bids at or just under the maximum to secure the ticket in the last few minutes.  
+ In a similar manner to the Flights class, an EntertainmentBuyer class could be built that takes requests for certain tickets and trades to try to obtain that ticket.  The strategy could involve providing a maximum price, and the EntertainmentBuyer could bid at lower prices, slowly incrementing as time goes on, until it bids at or just under the maximum to secure the ticket in the last few minutes.  It could also recognise a required ticket for sale at a reasonable price and purchase it, and handle the buying of cheap tickets for sale at higher prices, to make a profit.
+ 
+ A strategy that involved purchasing any hotel room that was available at a low price (such as under 10) was tested during development.  Unfortunately, it clashed with the agent's other functionality at that point in time (as hotel purchases directly triggered flight bids), so was temporarily removed.  It would certainly be possible to add this strategy to the current code, and would increase the agent's flexibility, as it would gather a pool of cheap hotel rooms to allocate to clients in case those clients' packages become infeasible.  As the hotels being purchased are extremely cheap, even if they are not used, their cost does not have too much impact on the final score.
+ 
+ In the current code, the Client does not react to the closure of auctions.  It would improve the agent if the Client were notified when hotel auctions closed, so it could change its preferences if the package it was trying to create had become infeasible.  However, care would have to be taken to ensure the Client was notified of the auction closure \em after \em all transactions from that auction had been processed, and allocated to the appropriate Clients.
+  
+ One slight drawback of the Client design is that the agent can only offer it one item at a time, so allocation is essentially based on the order in which items are won.  Although this suits the current functionality of the agent, which allocates items as soon as a transaction occurs, an interesting alternative would be to store all owned flights, hotel rooms and entertainment tickets, and allow the client to choose which ones suit it best, rather than just deciding whether a particular item is suitable or not suitable.
+ 
+ Another situation where allowing the Client to choose from all available items would be beneficial is when reallocating items.  As the allocation algorithm is essentially a greedy one, it will most likely be less than optimal.  An improvement would be to deallocate all items from the Clients and reallocate them, to allow the Clients to select better suited items.
+ 
+ Finally, the way the Client is designed opens up an extremely interesting possibility.  With a few adjustments, the Client could be made abstract, allowing a number of Clients with different strategies.  The type of Client used could either be chosen based on the initial preferences, or chosen at random.  Essentially, each Client would be modelled as an agent, working within the confines of the main agent, so could produce some fascinating emergent properties.
 
 \section{Conclusions}
  \label{conc}
