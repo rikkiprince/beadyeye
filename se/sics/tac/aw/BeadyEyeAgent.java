@@ -82,6 +82,7 @@ public class BeadyEyeAgent extends AgentImpl
 			if(client[c].needsMoreEntertainment())
 			{
 				Entertainment ent = client[c].getBestEntertainment();
+				// TODO: check if null!
 				int day = ent.day();
 				int type = ent.type();
 				float price = ent.price();

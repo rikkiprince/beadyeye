@@ -27,8 +27,7 @@
 % For tracking purposes - this is V2.9SP - MARCH 2007
 
 \documentclass{acm_proc_article-sp}
- 
-\usepackage{color}
+
 
 %-- Begin patch area for accents in 'Author Block' area - may be needed by some authors / but not all
 \DeclareFixedFont{\auacc}{OT1}{phv}{m}{n}{12}   % Needed for "Author Block" accents - Patch by Gerry 3/21/07
@@ -38,6 +37,7 @@
 
 \title{COMP6006: Intelligent Agents Report}
  \subtitle{The BeadyEye Agent
+ \titlenote{Despite the name, this agent currently does little in the way of implementing the Belief-Desire-Intention (BDI) theory.}
 %\titlenote{A full version of this paper is available as
 %\textit{Author's Guide to Preparing ACM SIG Proceedings Using
 %\LaTeX$2_\epsilon$\ and BibTeX} at \texttt{www.acm.org/eaddress.htm}}
@@ -97,7 +97,7 @@ Rikki Prince\\
 %\additionalauthors{Additional authors: John Smith (The Th{\o}rv\"{a}ld Group,
 %email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
 %(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
-\date{}
+\date{25th May 2007}
 % Just remember to make sure that the TOTAL number of authors
 % is the number that will appear on the first page PLUS the
 % number that will appear in the \additionalauthors section.
@@ -110,7 +110,9 @@ Rikki Prince\\
  %%%%%%%%%%%%
  % ABSTRACT %
  %%%%%%%%%%%%
- \textcolor{red}{FILL THIS IN.}
+ The design of the BeadyEye (rfp102) agent is discussed, as well as some of the heuristics behind its bidding strategies, before analysing the results and performance of the agent within the COMP6006 Intelligent Agents TAC contest.
+ 
+ The report concludes that the agent performed quite poorly due to the crude tactics it employed.  However, the structure of the design is such that further work is simplified and a number of highly feasible improvements are suggested for future work building on this agent's base.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -125,31 +127,31 @@ Rikki Prince\\
 \section{Introduction}
  \label{intro}
 
- This report describes the approach taken in creating a software agent to compete in a TAC Classic contest hosted at the University of Southampton for the module COMP6006: Intelligent Agents.
+ This report describes the approach taken in creating the BeadyEye software agent (known as rfp102 for the purposes of the competition) to compete in a TAC Classic contest hosted at the University of Southampton for the module COMP6006: Intelligent Agents.
  
- This introduction further explains the format of the competition.  Then Section~\ref{approach} discusses overall approach taken by this agent, Section~\ref{design} describes the design used to implement this approach and Section~\ref{heuristics} explains some of the heuristics used to make bidding decisions.  Section~\ref{res} presents the results of the competition, after which Section~\ref{eval} evaluates this agent's performance.  Finally, some future improvements are suggested in Section~\ref{future}, before conclusions are drawn in Section~\ref{conc}.
+ This introduction further explains the format of the competition.  Then Section~\ref{approach} discusses the overall approach taken by this agent, Section~\ref{design} describes the design used to implement this approach and Section~\ref{heuristics} explains some of the heuristics used to make bidding decisions.  Section~\ref{res} presents the results of the competition, after which Section~\ref{eval} evaluates this agent's performance.  Finally, some future improvements are suggested in Section~\ref{future}, before conclusions are drawn in Section~\ref{conc}.
  
  \subsection{TAC}
- The Trading Agent Competition (TAC) is an annual contest organised by, and for, the agent research community, with the assistance of the Swedish Institute of Computer Science (SICS) since 2002.  The hope is that by fostering a competetive spirit, the advancement of the field will be accelerated.  The competition current consists of two scenarios: TAC Classic and TAC SCM \cite{SICS2007a}.
+ The Trading Agent Competition (TAC) is an annual contest organised by, and for, the agent research community, with the assistance of the Swedish Institute of Computer Science (SICS) since 2002.  The hope is that by fostering a competitive spirit, the advancement of the field will be accelerated.  The competition current consists of two scenarios: TAC Classic and TAC SCM \cite{SICS2007c}.
  
- It is the TAC Classic scenario which was faced in this challenge.  This scenario involves acting as a ``travel agent", to create holiday packages to suit the requirements of a group of eight customers.  A holiday package consists of inbound and outbound flights, a hotel room for each night of the stay and tickets to entertainment venues.  Further complexity is added by the fact that there are two hotels to choose from and three entertainment venues.  In total, the agent is required to co-ordinate bidding strategies in up to 28 different auctions.
+ It is the TAC Classic scenario which was faced in this challenge.  This scenario involves acting as a ``travel agent", to create holiday packages to suit the requirements of a group of eight customers.  A holiday package consists of inbound and outbound flights, a hotel room for each night of the stay and tickets to entertainment venues.  Further complexity is added by the fact that there are two hotels of contrasting quality (ShorelineShanty and TampaTowers) to choose from and three entertainment venues.  In total, the agent is required to co-ordinate bidding strategies in up to 28 different auctions.
  
- The auctions also vary in format.  The flight auctions clear instantly, but have a sell price which varies every 10 seconds, based on a stochastic function.  An auction is held for each night, in each hotel, though only 16 rooms are available per hotel.  Therefore the auction is an ascending-price, multi-unit English auction, where the 16 winners pay the 16th highest price.  The quirk is that one hotel auction closes every minute, in a randomly selected order.  Finally, entertainment auctions allow agents to buy and sell tickets from each other once they negotiate a price \cite{SICS2007b}.
+ The auctions also vary in format.  The flight auctions clear instantly, but have a sell price which varies every 10 seconds, based on a stochastic function.  An auction is held for each night, in each hotel, though only 16 rooms are available per hotel.  Therefore the auction is an ascending-price, multi-unit English auction, where the 16 winners pay the 16th highest price.  The quirk is that one hotel auction closes every minute, in a randomly selected order.  Finally, entertainment auctions allow agents to buy and sell tickets from each other, but only once their buy and sell prices crossover, much like in a stock market \cite{SICS2007b}.
  
- Bidding in auctions is performed by sending bid strings to the TAC server, containing the number of items required and the price the agent is willing to pay.  Fortunately, the process of submitting bids and retrieving information about the clients' preferences and current state of the auctions is made slightly easier by the TAC Classic Java Agent Ware \cite{SICS2007c}.
+ Bidding in auctions is performed by sending bid strings to the TAC server, containing the number of items required and the price the agent is willing to pay.  Fortunately, the process of submitting bids and retrieving information about the clients' preferences and current state of the auctions is made slightly easier by the TAC Classic Java Agent Ware \cite{SICS2007a}.
  
  At the end of a TAC game, the competing agents are ranked against each other based on how well they fulfilled their clients' requirements.  The measure of fulfillment is known as the utility, and is based upon how close the package is to the clients' preferred start and end dates, as well as whether the package matches the quality of hotel the client wanted and includes their favoured entertainment.  The final score for the agent is the total utility, minus the costs of purchasing the various items which make up the packages.
  
  \subsection{The COMP6006 Contest}
  
- The contest held for the COMP6006 module ran over two days.  Entrants competed on one of the two days, against up to 25 others.  However, as each game only allows for eight competitors at a time, the two days were arranged so that each agent would compete in around 10-15 games, against a different group of opponents in each game.
+ The contest held for the COMP6006 module ran over two days.  Entrants competed on one of the two days, against up to 25 others.  However, as each game only allows for eight competitors at a time, the two days were arranged so that each agent would compete in 10 games, against a different group of opponents in each game.
  
  To vary the level of the competition, and provide somewhat of a benchmark, the agent which finished second in the 2005 actual TAC contest, ``Dolphin", and the DummyAgent provided in the Agent Ware, were both included as competitors.
  
 \section{Approach}
  \label{approach}
 
- The initial aproach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code would be more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
+ The initial approach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code would be more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
  \begin{verbatim}
   agent.getClientPreference(c, TACAgent.ARRIVAL);
  \end{verbatim}
@@ -190,37 +192,41 @@ Rikki Prince\\
   \caption{A UML class diagram depicting the Client design.}
   \label{client}
 \end{figure}
+
+  As can be seen from the class diagram in Figure~\ref{client}, accessor methods for the various information stored in the Client were provided, as were methods for printing an ASCII grid of the preferences and allocated items, grouped by day, and for calculating the utility, cost and score.  The \verb".doYouWant()" method is called by the agent once a transaction is complete, to offer to allocate the owned item to that Client.  The \verb".getBestEntertainment()" method provides a way for the agent to discover which entertainment ticket to bid for next.
+  
+  The presence of a \verb".compareTo()" method implies that the Client \verb"implements Comparable", which allows the agent to sort the array of Clients by some custom rules, so allocation of owned items is likely to go to the Clients that most need it.  This agent implements ordering first by whether the Clients being compared have complete hotel packages.  Then if they both do, or do not, it sorts by the number of nights long the intended package will be (shortest package first).  This avoids wastefully allocating items to Clients with long, possibly unfeasible packages.
   
   \subsection{Flights}
-   The Flights class provides a central place for recording and analysing the flight prices, and hence deciding the best time pruchase the required flights.  As and when a client chooses a definitive day they wish to fly in or out on, the .pleaseBuy() of the Flights object is called to specify the need of a particular flight.  Every time the quote in a flight auction is updated (every 10 seconds), this information is relayed to the Flights object, which records the quote price for trend analysis both in the agent during the game, and in external statistics packages at a later date.  The analysis of the trend when the quote is updated can also trigger a bid for the flight, if the price is determined to be optimal.
+   The Flights class provides a central place for recording and analysing the flight prices, and hence deciding the best time to purchase the required flights.  As and when a client chooses a definitive day they wish to fly in or out on, the \verb".pleaseBuy()" method of the Flights object is called to specify the need of a particular flight.  Every time the quote in a flight auction is updated (every 10 seconds), this information is relayed to the Flights object, which records the quote price for trend analysis both in the agent during the game, and in external statistics packages at a later date.  The analysis of the trend when the quote is updated can also trigger a bid for the flight, if the price is determined to be optimal.
    
   \subsection{Supporting Classes}
-   As the standard logging used in the Agent Ware outputs to XML and is difficult to analyse, a supporting class called ``ScreenAndFile" was created to allow one method to be called to print to the standard output and to a file (the name of which is specified in the construtor).  It is also quicker to type \begin{verbatim}  OUT.println("Hello, world!");\end{verbatim} than \begin{verbatim}  System.out.println("Hello, world!");\end{verbatim}
+   As the standard logging used in the Agent Ware outputs to XML and is difficult to analyse, a supporting class called ``ScreenAndFile" was created to allow one method to be called to print to the standard output and to a file (the name of which is specified in the constructor).  It is also quicker to type \begin{verbatim}  OUT.println("Hello, world!");\end{verbatim} than \begin{verbatim}  System.out.println("Hello, world!");\end{verbatim}
    
    A class of static values was also created to store any common constant values that were shared by the various other classes, such as \verb"Constants.FIRST_DAY" and \verb"Constants.NUM_CLIENTS".
 
 \section{Heuristics}
- \label{heurisitics}
+ \label{heuristics}
  \subsection{Initial Hotel Bids}
   The main heuristic used was to determine the price to bid for hotel rooms.  Firstly, a constant is chosen to determine the total available to spend on hotel rooms over the course of the holiday.  This was initially selected to be 1000, simply based on this being the utility available for putting together a feasible package.
   
   This value then has to be split over the number of the days the client wishes to stay.  For a one night stay, this is simple, as the full amount is used.  For two nights, the value was split evenly, as if only one night was won, it does not matter which.  While the same could be done for three and four night stays, splitting the price between so many nights might reduce the likelihood of winning any hotel rooms at all for the client.  Instead, it was decided that a heavier weighting should be placed on one day, and the other nights weighted toward that night accordingly, to improve the odds of winning hotel rooms for consecutive nights.  Therefore, the hotel bid prices ratios for a three night and four night are 50\%:35\%:15\% and 40\%:30\%:20\%:10\%, respectively.
   
-  Finally, if the client wishes to stay in the better TampaTowers hotel, the bid price per night is increased by the premium the client is willing to pay for the upgrade, again divided by the number of nights.
+  Finally, if the Client has decided to stay in the better TampaTowers hotel, the bid price per night is increased by the premium the client is willing to pay for the upgrade, again divided by the number of nights.  The better hotel is chosen if the premium per night is greater than 50, though this value was chosen for testing purposes and not updated.
   
  \subsection{Flight Bids}
-  The Flights class was designed so that analysis of the flight quotes so far could performed, and hence an optimal time to bid be calculated.  Unfortunately, there was not enough time to implement the trend analysis, so the simple heuristic of purchasing flights as soon as the client has all the hotel rooms they require, was implemented.  The reason behind this was that it avoids the risk of the flight price becoming higher.  Obviously, it does not take advantage of the fact that the price could reduce, though hopefully the price will average out over the course of a number of games.
+  The Flights class was designed so that analysis of the flight quotes so far could be performed, and hence an optimal time to bid could be calculated.  Unfortunately, there was not enough time to implement the trend analysis, so the simple heuristic of purchasing flights as soon as the client has all the hotel rooms they require, was implemented.  The reason behind this was that it avoids the risk of the flight price becoming higher.  Obviously, it does not take advantage of the fact that the price could reduce, though hopefully the price will average out over the course of a number of games.
   
  \subsection{Entertainment}
   Little was done to intelligently bid for entertainment tickets.  Once the initially owned entertainment tickets were allocated to clients, any left over were immediately placed for sale at an arbitrarily chosen price of 80.  This is a not-overly expensive price, so the ticket should eventually sell, ensuring the entertainment ticket is not wasted.
   
-  When a particular Client receives all of the hotel rooms and flights they require for a feasible package, the agent elicits which entertainment would be best to purchase from the Client.  The selection process is based on whether the Client has any spare nights to visit an entertainment venue (if all nights are occupied, no entertainment is required), and then which entertainment would gain the highest utility for the Client.  The agent then simply bids the value of the utility premium, hoping that another agent is selling a ticket for less than that value, but also well aware that it will not purchase entertainment for a price higher than it will recoup in utility, so will no receive a negative score (at least in terms of entertainment).
+  When a particular Client receives all of the hotel rooms and flights they require for a feasible package, the agent elicits which entertainment would be best to purchase from the Client.  The selection process is based on whether the Client has any spare nights to visit an entertainment venue (if all nights are occupied, no entertainment is required), and then which entertainment would gain the highest utility for the Client.  The agent then simply bids the value of the utility premium, hoping that another agent is selling a ticket for less than that value, but also well aware that it will not purchase entertainment for a price higher than it will recoup in utility, so will not receive a negative score (at least in terms of entertainment).
   
   Finally, it was noticed during testing that a bug in some agents' code would cause them to bid very large amounts to purchase entertainment tickets.  As the penalty for selling an unowned ticket is only 200, it was decided that if any agent bids more than 200 for an entertainment ticket, it should be sold to them for whatever price they wish to pay for it.  Whilst slightly underhand, and rather unlikely to happen in a competition, it causes little harm to leave the code in to take advantage of such bugs.
 
 \section{Results}
  \label{res}
- The agent describe in this report finished 17th out of twenty-three competitors on the day it competed.  If the results of the second day of competition are included, the agent ranks at 28th out of forty-eight, though this may not be a fair comparison as it did not play any TAC games against the competitors of the second day.
+ The agent described in this report finished 17th out of twenty-three competitors on the day it competed.  If the results of the second day of competition are included, the agent ranks at 28th out of forty-eight, though this may not be a fair comparison as it did not play any TAC games against the competitors of the second day.
  
  \begin{table}		%[htbp]
  \begin{center}
@@ -288,11 +294,11 @@ Rikki Prince\\
  
 \section{Evaluation}
  \label{eval}
- Comparing the scores of the agent (disregarding the anomolous results) in Table~\ref{res_anom} with those of the top 3 agents in the competition (Table~\ref{top3}) gives a clue as to why this agent did not perform as well as others.  Firstly, the average utility gained was not as high, falling some 600 short of the better agents.  More importantly, however, the costs were significantly higher than the top two agents.
+ Comparing the scores of the agent (disregarding the anomalous results) in Table~\ref{res_anom} with those of the top 3 agents in the competition (Table~\ref{top3}) gives a clue as to why this agent did not perform as well as others.  Firstly, the average utility gained was not as high, falling some 600 short of the better agents.  More importantly, however, the costs were significantly higher than the top two agents.
 
- Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a NullPointerException, which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method getBestEntertainment() returns null.  The code which invokes this method fails to check whether the returned object is null before attempting to use it.
+ Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a \verb"NullPointerException", which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method \verb".getBestEntertainment()" returns \verb"null".  The code which invokes this method fails to check whether the returned object is null before attempting to use it.
  
- The relatively consistent utility (varying from the mean by only around 4\%) over the 8 other games indicates that the clients' packages were being fairly successfully created according to their preferences.  This makes sense, as the agent only purchases flights once the hotel package has been completed, and the agent bids quite high amounts for hotels.  However, the larger disparity in the costs (up to 30\% different from the mean) suggests the purchasing strategy was somewhat flawed. In particular, savings could have been made in the purchasing of flights had some form of trend analysis been implemented, while the heuristics used to choose hotel and entertainment bid prices would have benefitted from some fine tuning.
+ The relatively consistent utility (varying from the mean by only around 4\%) over the 8 other games indicates that the clients' packages were being fairly successfully created according to their preferences.  This makes sense, as the agent only purchases flights once the hotel package has been completed, and the agent bids quite high amounts for hotels.  However, the larger disparity in the costs (up to 30\% different from the mean) suggests the purchasing strategy was somewhat flawed. In particular, savings could have been made in the purchasing of flights, had some form of trend analysis been implemented, while the heuristics used to choose hotel and entertainment bid prices would have benefitted from some fine tuning.
  
 \section{Future Improvements}
  \label{future}
@@ -314,19 +320,19 @@ Rikki Prince\\
 
 \section{Conclusions}
  \label{conc}
- \textcolor{red}{FILL THIS IN.}
+ This paper has discussed the BeadyEye (a.k.a rfp102) agent created for the COMP6006 Intelligent Agents course and its Trading Agent Competition.  It briefly described the competition and its rules, the approach taken in producing an agent and analysed the results of the competition.
+ 
+ In conclusion, this agent did not perform fantastically, but this was due to the lack of certain potential features that were not implemented in time for the competition.  The heuristics used were basic, and although packages were created well, resulting in a fairly consistent utility value, the purchasing strategies were not intelligent enough and as a result, the agent overpaid on occasions.
+ 
+ The approach taken was to build a strong basis for building a good agent in the TAC competition, and unfortunately, this impacted on the amount of time spent creating clever bidding strategies.  However, this paper suggests a number of improvements to the agent, which should be fairly feasible to implement on top of the code in its current form.  Therefore, the code is made available on the ECS UGforge website at the following address: \begin{verbatim}https://ugforge.ecs.soton.ac.uk/projects/beadyeye/\end{verbatim}
 %\end{document}  % This is where a 'short' article might terminate
-
-%ACKNOWLEDGMENTS are optional
-\section{Acknowledgments}
- \textcolor{red}{FILL THIS IN.}
-PV for help.
 
 %
 % The following two commands are all you need in the
 % initial runs of your .tex file to
 % produce the bibliography for the citations in your paper.
 \bibliographystyle{abbrv}
+\bibliography{AgentsBib}
 %\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
 % You must have a proper ".bib" file
 %  and remember to run:

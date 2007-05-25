@@ -3,13 +3,13 @@ Encoding: Cp1252
 
 @MISC{SICS2007a,
   author = {SICS},
-  title = {Trading Agent Competition},
+  title = {TAC Classic Software},
   howpublished = {Website},
   year = {2007},
   note = {Last Accessed: 22 May 2007},
   owner = {rprince},
   timestamp = {2007.05.22},
-  url = {http://www.sics.se/tac/page.php?id=2}
+  url = {http://www.sics.se/tac/page.php?id=12}
 }
 
 @MISC{SICS2007b,
@@ -25,13 +25,21 @@ Encoding: Cp1252
 
 @MISC{SICS2007c,
   author = {SICS},
-  title = {TAC Classic Software},
+  title = {Trading Agent Competition},
   howpublished = {Website},
   year = {2007},
   note = {Last Accessed: 22 May 2007},
   owner = {rprince},
   timestamp = {2007.05.22},
-  url = {http://www.sics.se/tac/page.php?id=12}
+  url = {http://www.sics.se/tac/page.php?id=2}
+}
+
+@MISC{Vytelingum2007,
+  author = {Perukrishnen Vytelingum},
+  year = {2007},
+  note = {Personal communication},
+  owner = {rprince},
+  timestamp = {2007.05.25}
 }
 
 @comment{jabref-meta: selector_publisher:}
