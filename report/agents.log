@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.30.6-2.2 (MiKTeX 2.5) (preloaded format=pdflatex 2007.4.12)  25 MAY 2007 02:15
+This is pdfeTeX, Version 3.141592-1.30.6-2.2 (MiKTeX 2.5) (preloaded format=pdflatex 2007.4.12)  25 MAY 2007 13:52
 entering extended mode
 **C:/Users/rprince/Desktop/DEGREE/Agents/AgentCode/report/agents.tex
 (C:\Users\rprince\Desktop\DEGREE\Agents\AgentCode\report\agents.tex
@@ -164,23 +164,31 @@ Using 'Abbrev' bibliography style
 \acmcopyr=\toks33
 \boilerplate=\toks34
 \copyrightetc=\toks35
+) ("C:\Program Files\MiKTeX 2.5\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\00miktex\color.cfg"
+File: color.cfg 2005/12/29 v1.1 MiKTeX 'color' configuration
 )
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 32.
- ("C:\Program Files\MiKTeX 2.5\tex\latex\psnfss\ot1phv.fd"
+Package color Info: Driver file: pdftex.def on input line 130.
+)
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 34.
+
+("C:\Program Files\MiKTeX 2.5\tex\latex\psnfss\ot1phv.fd"
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 ) (agents.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
 
 ("C:\Program Files\MiKTeX 2.5\tex\context\base\supp-pdf.tex"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -194,61 +202,74 @@ LaTeX Font Info:    ... okay on input line 35.
 \MPnumerator=\count113
 \everyMPtoPDFconversion=\toks36
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 103.
+LaTeX Font Info:    Try loading font information for U+msa on input line 105.
  ("C:\Program Files\MiKTeX 2.5\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 103.
+LaTeX Font Info:    Try loading font information for U+msb on input line 105.
 
 ("C:\Program Files\MiKTeX 2.5\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 103.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 105.
 
 ("C:\Program Files\MiKTeX 2.5\tex\latex\base\ulasy.fd"
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-! Undefined control sequence.
-<argument> \undefinedpagestyle 
-                               
-l.106 \pagestyle{headings}
-                          
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+
+LaTeX Warning: Reference `heuristics' on page 1 undefined on input line 130.
 
 
-LaTeX Warning: Citation `SICS2007a' on page 1 undefined on input line 129.
+LaTeX Warning: Citation `SICS2007a' on page 1 undefined on input line 133.
 
 
-LaTeX Warning: Citation `SICS2007b' on page 1 undefined on input line 133.
+LaTeX Warning: Citation `SICS2007b' on page 1 undefined on input line 137.
 
 
-LaTeX Warning: Citation `SICE2007c' on page 1 undefined on input line 135.
+LaTeX Warning: Citation `SICS2007c' on page 1 undefined on input line 139.
 
 [1{psfonts.map}
 
 
-] [2] [3] (agents.aux) ) 
+] <client2.png, id=20, 346.29375pt x 588.1975pt>
+File: client2.png Graphic file (type png)
+
+<use client2.png> [2 <client2.png (PNG copy)>] [3]
+Overfull \hbox (8.51636pt too wide) in paragraph at lines 290--291
+\OT1/cmr/m/n/9 Comparing the scores of the agent (dis-re-gard-ing the anomolous
+
+ []
+
+
+LaTeX Warning: Citation `Vytelingum2007' on page 4 undefined on input line 298.
+
+
+[4
+
+] (agents.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2008 strings out of 95419
- 21965 string characters out of 1187332
- 79498 words of memory out of 1073470
- 5085 multiletter control sequences out of 60000
+ 2076 strings out of 95419
+ 22758 string characters out of 1187332
+ 78583 words of memory out of 1074603
+ 5139 multiletter control sequences out of 60000
  42386 words of font info for 57 fonts, out of 1000000 for 2000
  14 hyphenation exceptions out of 8191
- 39i,10n,26p,847b,251s stack positions out of 5000i,500n,10000p,200000b,32768s
+ 39i,11n,26p,847b,260s stack positions out of 5000i,500n,10000p,200000b,32768s
 PDF statistics:
- 34 PDF objects out of 300000
+ 35 PDF objects out of 300000
  0 named destinations out of 300000
- 1 words of extra memory for PDF output out of 10000
-<C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmr
-6.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program
- Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmtt9.pfb><C:/Program Files/MiKTeX 2.5
-/fonts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/blue
-sky/cm/cmr9.pfb>{8r.enc}<C:/Program Files/MiKTeX 2.5/fonts/type1/urw/times/utmb
-8a.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Pro
-gram Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on agents.pdf (3 pages, 77709 bytes).
+ 6 words of extra memory for PDF output out of 10000
+<C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/cm/cmsy9.pfb><C:/Program Fil
+es/MiKTeX 2.5/fonts/type1/bluesky/cm/cmtt9.pfb><C:/Program Files/MiKTeX 2.5/fon
+ts/type1/bluesky/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.5/fonts/type1/bluesky/
+cm/cmr9.pfb>{8r.enc}<C:/Program Files/MiKTeX 2.5/fonts/type1/urw/times/utmb8a.p
+fb><C:/Program Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program
+ Files/MiKTeX 2.5/fonts/type1/urw/helvetic/uhvb8a.pfb>
+Output written on agents.pdf (4 pages, 99329 bytes).

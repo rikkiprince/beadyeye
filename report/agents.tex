@@ -27,6 +27,8 @@
 % For tracking purposes - this is V2.9SP - MARCH 2007
 
 \documentclass{acm_proc_article-sp}
+ 
+\usepackage{color}
 
 %-- Begin patch area for accents in 'Author Block' area - may be needed by some authors / but not all
 \DeclareFixedFont{\auacc}{OT1}{phv}{m}{n}{12}   % Needed for "Author Block" accents - Patch by Gerry 3/21/07
@@ -108,7 +110,7 @@ Rikki Prince\\
  %%%%%%%%%%%%
  % ABSTRACT %
  %%%%%%%%%%%%
- This is the abstract of my report.
+ \textcolor{red}{FILL THIS IN.}
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -121,29 +123,33 @@ Rikki Prince\\
 %\keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
 
 \section{Introduction}
+ \label{intro}
 
- This report describes the approach taken in creating a software agent to compete in a TAC Classic contest hosted at the University of Southampton for the module COMP6006.
+ This report describes the approach taken in creating a software agent to compete in a TAC Classic contest hosted at the University of Southampton for the module COMP6006: Intelligent Agents.
+ 
+ This introduction further explains the format of the competition.  Then Section~\ref{approach} discusses overall approach taken by this agent, Section~\ref{design} describes the design used to implement this approach and Section~\ref{heuristics} explains some of the heuristics used to make bidding decisions.  Section~\ref{res} presents the results of the competition, after which Section~\ref{eval} evaluates this agent's performance.  Finally, some future improvements are suggested in Section~\ref{future}, before conclusions are drawn in Section~\ref{conc}.
  
  \subsection{TAC}
- The Trading Agent Competition (TAC) is an annual contest organised by, and for, the agent research community, since 2002.  The hope is that by fostering a competetive spirit, the advancement of the field will be accelerated.  The competition current consists of two scenarios: TAC Classic and TAC SCM \cite{SICS2007a}.
+ The Trading Agent Competition (TAC) is an annual contest organised by, and for, the agent research community, with the assistance of the Swedish Institute of Computer Science (SICS) since 2002.  The hope is that by fostering a competetive spirit, the advancement of the field will be accelerated.  The competition current consists of two scenarios: TAC Classic and TAC SCM \cite{SICS2007a}.
  
  It is the TAC Classic scenario which was faced in this challenge.  This scenario involves acting as a ``travel agent", to create holiday packages to suit the requirements of a group of eight customers.  A holiday package consists of inbound and outbound flights, a hotel room for each night of the stay and tickets to entertainment venues.  Further complexity is added by the fact that there are two hotels to choose from and three entertainment venues.  In total, the agent is required to co-ordinate bidding strategies in up to 28 different auctions.
  
- The auctions also vary in format.  The flight auctions clear instantly, but have a sell price which varies every 10 seconds, based on a stochastic function.  An auction is held for each night, in each hotel, though only 16 rooms are available per hotel.  Therefore the auction is an ascending-price, multi-unit English auction.  The quirk is that one hotel auction closes every minute, in a randomly selected order.  Finally, entertainment auctions allow agents to buy and sell tickets from each other once they negotiate a price \cite{SICS2007b}.
+ The auctions also vary in format.  The flight auctions clear instantly, but have a sell price which varies every 10 seconds, based on a stochastic function.  An auction is held for each night, in each hotel, though only 16 rooms are available per hotel.  Therefore the auction is an ascending-price, multi-unit English auction, where the 16 winners pay the 16th highest price.  The quirk is that one hotel auction closes every minute, in a randomly selected order.  Finally, entertainment auctions allow agents to buy and sell tickets from each other once they negotiate a price \cite{SICS2007b}.
  
- Bidding in auctions is performed by sending bid strings to the TAC server, containing the number of items required and the price the agent is willing to pay.  Fortunately, the process of submitting bids and retrieving information about the clients' preferences and current state of the auctions is made slightly easier by the TAC Classic Java Agent Ware \cite{SICE2007c}.
+ Bidding in auctions is performed by sending bid strings to the TAC server, containing the number of items required and the price the agent is willing to pay.  Fortunately, the process of submitting bids and retrieving information about the clients' preferences and current state of the auctions is made slightly easier by the TAC Classic Java Agent Ware \cite{SICS2007c}.
  
  At the end of a TAC game, the competing agents are ranked against each other based on how well they fulfilled their clients' requirements.  The measure of fulfillment is known as the utility, and is based upon how close the package is to the clients' preferred start and end dates, as well as whether the package matches the quality of hotel the client wanted and includes their favoured entertainment.  The final score for the agent is the total utility, minus the costs of purchasing the various items which make up the packages.
  
- \subsection{The running of the Soton contest}
+ \subsection{The COMP6006 Contest}
  
  The contest held for the COMP6006 module ran over two days.  Entrants competed on one of the two days, against up to 25 others.  However, as each game only allows for eight competitors at a time, the two days were arranged so that each agent would compete in around 10-15 games, against a different group of opponents in each game.
  
  To vary the level of the competition, and provide somewhat of a benchmark, the agent which finished second in the 2005 actual TAC contest, ``Dolphin", and the DummyAgent provided in the Agent Ware, were both included as competitors.
  
 \section{Approach}
+ \label{approach}
 
- The initial aproach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code were more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
+ The initial aproach taken was to better encapsulate the data available into Java objects, so that programming the decision making aspects of the code would be more intuitive to write and manipulate.  Agent Ware provides access to client preferences with lines of code such as:
  \begin{verbatim}
   agent.getClientPreference(c, TACAgent.ARRIVAL);
  \end{verbatim}
@@ -162,10 +168,12 @@ Rikki Prince\\
   \item Upon a transaction, allocate item won to client that requires it.
    \begin{itemize}
     \item If client has all the hotel rooms it needs, purchase flights.
+    \item If client has both inbound and outbound flights, purchase suitable entertainment.
    \end{itemize}
  \end{enumerate}
 
 \section{Design}
+ \label{design}
 
  As discussed above, the approach taken was to construct objects for storing the available data in a more logical format.  This section describes the design of the classes that store and process this data.  These classes work on top of the Agent Ware code, the design of which is not examined here.
  
@@ -174,18 +182,43 @@ Rikki Prince\\
   
   Within this agent, the Client had to be designed to store both the original client preferences, and any updated preferences that result from changes within the game environment.  Once a hotel auction closes, if the agent did not win the required number of rooms for that night, the client's preferred package could become invalid, and hence the requirements of that client would have to change.  Additionally, the Client must keep track of any rooms, flights or entertainment tickets which have been allocated to it, and how much they cost to purchase.
   
+\begin{figure}
+  \begin{center}
+    %\includegraphics[keepaspectratio=true, width=10cm]{client2}
+    \includegraphics[keepaspectratio=true, width=0.35\textwidth]{client2}
+  \end{center}
+  \caption{A UML class diagram depicting the Client design.}
+  \label{client}
+\end{figure}
+  
   \subsection{Flights}
    The Flights class provides a central place for recording and analysing the flight prices, and hence deciding the best time pruchase the required flights.  As and when a client chooses a definitive day they wish to fly in or out on, the .pleaseBuy() of the Flights object is called to specify the need of a particular flight.  Every time the quote in a flight auction is updated (every 10 seconds), this information is relayed to the Flights object, which records the quote price for trend analysis both in the agent during the game, and in external statistics packages at a later date.  The analysis of the trend when the quote is updated can also trigger a bid for the flight, if the price is determined to be optimal.
+   
+  \subsection{Supporting Classes}
+ \textcolor{red}{FILL THIS IN.}
+   ScreenAndFile and Constants
 
 \section{Heuristics}
+ \label{heurisitics}
  \subsection{Initial Hotel Bids}
   The main heuristic used was to determine the price to bid for hotel rooms.  Firstly, a constant is chosen to determine the total available to spend on hotel rooms over the course of the holiday.  This was initially selected to be 1000, simply based on this being the utility available for putting together a feasible package.
   
   This value then has to be split over the number of the days the client wishes to stay.  For a one night stay, this is simple, as the full amount is used.  For two nights, the value was split evenly, as if only one night was won, it does not matter which.  While the same could be done for three and four night stays, splitting the price between so many nights might reduce the likelihood of winning any hotel rooms at all for the client.  Instead, it was decided that a heavier weighting should be placed on one day, and the other nights weighted toward that night accordingly, to improve the odds of winning hotel rooms for consecutive nights.  Therefore, the hotel bid prices ratios for a three night and four night are 50\%:35\%:15\% and 40\%:30\%:20\%:10\%, respectively.
   
   Finally, if the client wishes to stay in the better TampaTowers hotel, the bid price per night is increased by the premium the client is willing to pay for the upgrade, again divided by the number of nights.
+  
+ \subsection{Flight Bids}
+  The Flights class was designed so that analysis of the flight quotes so far could performed, and hence an optimal time to bid be calculated.  Unfortunately, there was not enough time to implement the trend analysis, so the simple heuristic of purchasing flights as soon as the client has all the hotel rooms they require, was implemented.  The reason behind this was that it avoids the risk of the flight price becoming higher.  Obviously, it does not take advantage of the fact that the price could reduce, though hopefully the price will average out over the course of a number of games.
+  
+ \subsection{Entertainment}
+  Little was done to intelligently bid for entertainment tickets.  Once the initially owned entertainment tickets were allocated to clients, any left over were immediately placed for sale at an arbitrarily chosen price of 80.  This is a not-overly expensive price, so the ticket should eventually sell, ensuring the entertainment ticket is not wasted.
+  
+  When a particular Client receives all of the hotel rooms and flights they require for a feasible package, the agent elicits which entertainment would be best to purchase from the Client.  The selection process is based on whether the Client has any spare nights to visit an entertainment venue (if all nights are occupied, no entertainment is required), and then which entertainment would gain the highest utility for the Client.  The agent then simply bids the value of the utility premium, hoping that another agent is selling a ticket for less than that value, but also well aware that it will not purchase entertainment for a price higher than it will recoup in utility, so will no receive a negative score (at least in terms of entertainment).
+  
+  Finally, it was noticed during testing that a bug in some agents' code would cause them to bid very large amounts to purchase entertainment tickets.  As the penalty for selling an unowned ticket is only 200, it was decided that if any agent bids more than 200 for an entertainment ticket, it should be sold to them for whatever price they wish to pay for it.  Whilst slightly underhand, and rather unlikely to happen in a competition, it causes little harm to leave the code in to take advantage of such bugs.
 
 \section{Results}
+ \label{res}
  The agent describe in this report finished 17th out of twenty-three competitors on the day it competed.  If the results of the second day of competition are included, the agent ranks at 28th out of forty-eight, though this may not be a fair comparison as it did not play any TAC games against the competitors of the second day.
  
  \begin{table}		%[htbp]
@@ -253,24 +286,27 @@ Rikki Prince\\
  \end{table}
  
 \section{Evaluation}
+ \label{eval}
  Comparing the scores of the agent (disregarding the anomolous results) in Table~\ref{res_anom} with those of the top 3 agents in the competition (Table~\ref{top3}) gives a clue as to why this agent did not perform as well as others.  Firstly, the average utility gained was not as high, falling some 600 short of the better agents.  More importantly, however, the costs were significantly higher than the top two agents.
 
- Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a NullPointerException, which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method getBestEntertainment() returns null.  The code which invokes this method does not check whether the returned object is null before attempting to use it.
+ Analysis of the log files showed that the anomalous results in Games 599 and 604 were the result of a bug in the code.  This bug resulted in Java throwing a NullPointerException, which essentially stopped the rest of the code from functioning properly.  This is why no hotel rooms or flights were purchased, and consequently why the utility was zero.  The bug occurs when the agent attempts to purchase more entertainment tickets.  If the client can choose no suitable entertainment event that it needs, the method getBestEntertainment() returns null.  The code which invokes this method fails to check whether the returned object is null before attempting to use it.
+ 
+\section{Future Improvements}
+ \label{future}
+ There are a number of tactics which this agent provides a base for, and were planned in the development of this agent but were not implemented in time for the competition.
+ 
+ The Flights class is clearly designed so that the Client can request flights, and the Flight class will handle the responsibility of deciding when the optimal time to bid is and what is likely to be the cheapest price.  As this was not implemented, there is scope for a method to be added to calculate whether the flight price is increasing or decreasing, possibly using least squares regression \cite{Vytelingum2007}.
+ 
+ In a similar manner to the Flights class, an EntertainmentBuyer class could be built that takes requests for certain tickets and trades to try to obtain that ticket.  The strategy could involve providing a maximum price, and the EntertainmentBuyer could bid at lower prices, slowly incrementing as time goes on, until it bids at or just under the maximum to secure the ticket in the last few minutes.  
 
 \section{Conclusions}
-This paragraph will end the body of this sample document.
-Remember that you might still have Acknowledgments or
-Appendices; brief samples of these
-follow.  There is still the Bibliography to deal with; and
-we will make a disclaimer about that here: with the exception
-of the reference to the \LaTeX\ book, the citations in
-this paper are to articles which have nothing to
-do with the present subject and are used as
-examples only.
+ \label{conc}
+ \textcolor{red}{FILL THIS IN.}
 %\end{document}  % This is where a 'short' article might terminate
 
 %ACKNOWLEDGMENTS are optional
 \section{Acknowledgments}
+ \textcolor{red}{FILL THIS IN.}
 PV for help.
 
 %
